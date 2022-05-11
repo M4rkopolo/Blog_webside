@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
-            <h1>Angela's Blog</h1>
+            <h1>Mariusz Blog</h1>
             <span class="subheading">A collection of Angela's random musings.</span>
           </div>
         </div>
@@ -31,7 +31,7 @@
           </a>
           <p class="post-meta">Posted by
             <a href="#">{{post.author}}</a>
-            on {{post.date}} <a href="{{ url_for('delete', id=post.id) }}">✘</a></p>
+            on {{post.date}} </p>
         </div>
         <hr>
         {% endfor %}
@@ -39,7 +39,9 @@
 
         <!-- New Post -->
         <div class="clearfix">
+          {% if logged_in %}
           <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">Create New Post</a>
+          {% endif %}
         </div>
       </div>
     </div>
