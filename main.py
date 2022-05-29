@@ -8,7 +8,8 @@ from flask_ckeditor import CKEditor, CKEditorField
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 import os
-
+from flask_mail import Mail, Message
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import date
 
 app = Flask(__name__)
@@ -23,7 +24,12 @@ login_manager.init_app(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'data.sqlite')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+app.config['MAIL_SERVER']= 'smtp.poczta.onet.pl'
+app.config['MAIL_PORT']= 587
+app.config['MAIL_USE_TLS']= True
+app.config['MAIL_USERNAME']= "mariusztest123@op.pl"
+app.config['MAIL_PASSWORD']= "M4r1u521"
+mail = Mail(app)
 ##CONFIGURE TABLE
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -44,6 +50,19 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f"List(id: {self.id}, email: {self.email}, posts: {self.posts}, user_name:{self.user_name})"
+
+    def get_reset_token(self,expires_time = 100):
+        s = Serializer(app.config['SECRET_KEY'],expires_time)
+        return s.dumps({"user_id":self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)["user_id"]
+        except:
+            return None
+        return User.query.get(user_id)
 
 
 class BlogPost(db.Model):
@@ -109,6 +128,20 @@ class CreatePostForm(FlaskForm):
     body = CKEditorField("Blog Content", validators=[DataRequired()])
     submit = SubmitField("Submit Post")
 
+class ResetPasword(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
+    submit = SubmitField("Reset Password")
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            flash("There is no account which this email")
+
+class NewPassword(FlaskForm):
+    password = PasswordField("Password", validators=[DataRequired()])
+    repeat_password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("Set new password")
+
 
 class CommentForm(FlaskForm):
     comment = StringField("Comment", validators=[DataRequired()])
@@ -118,6 +151,63 @@ class CommentForm(FlaskForm):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    print(token)
+    msg=Message("Password reset request",
+                sender='mariusztest123@op.pl',
+                recipients=[user.email])
+    msg.body = f'''To reset your password viset following link:
+{url_for('reset_token',token=token, _external=True)}
+If you did not make this request then simply ignore this email and no chnge password 
+{user.user_name} {user.password}'''
+    mail.send(msg)
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    # if current_user.is_authenticated():
+    #     return redirect(url_for("get_all_posts"))
+    form = ResetPasword()
+    # if form.validate_on_submit():
+    #     redirect(url_for('new_password'))
+    if form.validate_on_submit():
+        user=User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash("An email has been sent with instructions to reset password")
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)
+
+# @app.route('/reset_password/<token>', methods=['GET', 'POST'])
+# def new_password(token):
+#     if current_user.is_authenticated():
+#         return redirect(url_for("get_all_posts"))
+#     if user is None:
+#         flash("THat is an invalid or expired token")
+#         return redirect(url_for('reset_password'))
+#     form = NewPassword()
+#     if form.validate_on_submit():
+#
+#     return render_template('new_password.html', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    # if current_user.is_authenticated():
+    #     return redirect(url_for("get_all_posts"))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash("THat is an invalid or expired token")
+        return redirect(url_for('reset_password'))
+    form = NewPassword()
+    if form.validate_on_submit():
+        # add check if user already exist
+        new_password = generate_password_hash(form.password.data,
+                               method='pbkdf2:sha256',
+                               salt_length=5)
+        user.password = new_password
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('new_password.html', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -131,6 +221,7 @@ def register():
             password=new_user.password.data,)
         db.session.add(new_user_db)
         db.session.commit()
+
         return redirect(url_for('get_all_posts'))
     return render_template('register.html', form=new_user, logged_in=current_user.is_authenticated)
 
