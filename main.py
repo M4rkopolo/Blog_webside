@@ -27,8 +27,8 @@ db = SQLAlchemy(app)
 app.config['MAIL_SERVER']= 'smtp.poczta.onet.pl'
 app.config['MAIL_PORT']= 587
 app.config['MAIL_USE_TLS']= True
-app.config['MAIL_USERNAME']= "mariusztest123@op.pl"
-app.config['MAIL_PASSWORD']= "M4r1u521"
+app.config['MAIL_USERNAME']= "xxx@email.pl"
+app.config['MAIL_PASSWORD']= "xxx"
 mail = Mail(app)
 ##CONFIGURE TABLE
 class User(UserMixin, db.Model):
@@ -97,15 +97,15 @@ class CommentDB(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String, unique=False, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_name = db.Column(db.String, db.ForeignKey('users.user_name'))
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
-    def __init__(self, comment, user_id, post_id):
+    def __init__(self, comment, user_name, post_id):
         self.comment = comment
         self.post_id = post_id
-        self.user_id = user_id
+        self.user_name = user_name
 
-#db.create_all()
+db.create_all()
 
 ##WTForm
 class NewUser(FlaskForm):
@@ -154,7 +154,6 @@ def load_user(user_id):
 
 def send_reset_email(user):
     token = user.get_reset_token()
-    print(token)
     msg=Message("Password reset request",
                 sender='mariusztest123@op.pl',
                 recipients=[user.email])
@@ -178,17 +177,6 @@ def reset_password():
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
 
-# @app.route('/reset_password/<token>', methods=['GET', 'POST'])
-# def new_password(token):
-#     if current_user.is_authenticated():
-#         return redirect(url_for("get_all_posts"))
-#     if user is None:
-#         flash("THat is an invalid or expired token")
-#         return redirect(url_for('reset_password'))
-#     form = NewPassword()
-#     if form.validate_on_submit():
-#
-#     return render_template('new_password.html', form=form)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
@@ -271,15 +259,25 @@ def get_all_posts():
 
 
 ##RENDER POST USING DB
-@app.route("/post/<int:id>")
+@app.route("/post/<int:id>", methods=['GET', 'POST'])
 def show_post(id):
     comments_form = CommentForm()
     requested_post = BlogPost.query.get(id)
+    comments = CommentDB.query.filter_by(post_id=id).all()
     rights = False
     if current_user.is_authenticated:
         rights = True if current_user.id == requested_post.post_id else False
+    if comments_form.validate_on_submit():
+        print("current_user.user_name")
+        new_comment = CommentDB(comment=comments_form.comment.data,
+                                user_name=current_user.user_name,
+                                post_id=id)
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(url_for('show_post', id=id))
     return render_template("post.html",
                            post=requested_post,
+                           all_comments = comments,
                            logged_in=current_user.is_authenticated,
                            have_rights = rights,
                            form = comments_form)
