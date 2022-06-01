@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -170,7 +170,7 @@ class CommentDB(db.Model):
         self.user_name = user_name
 
 
-db.create_all()
+#db.create_all()
 
 
 ##WTForm
@@ -417,7 +417,7 @@ def about():
     return render_template("about.html", logged_in=current_user.is_authenticated)
 
 
-@app.route("/delete/<int:id>", )
+@app.route("/delete/<int:id>")
 @login_required
 def delete(id):
     delete_post = BlogPost.query.get(id)
@@ -425,6 +425,25 @@ def delete(id):
     db.session.commit()
     return redirect(url_for('get_all_posts'))
 
+@app.route("/delete_note", methods=["GET"])
+def delete_note():
+    id = request.args.get('id')
+    id_table = request.args.get("id_table")
+    note_id = Note.query.filter_by(id=id).first()
+    db.session.delete(note_id)
+    db.session.commit()
+    return redirect(url_for('kanban_table', id=id_table))
+
+@app.route("/move_note", methods=["GET"])
+def move_note():
+    id = request.args.get('id')
+    id_table = request.args.get("id_table")
+    note_id = Note.query.filter_by(id=id).first()
+    print(request.args.get('stage'))
+    note_id.stage_name = request.args.get('stage')
+    # db.session.delete(note_id)
+    db.session.commit()
+    return redirect(url_for('kanban_table', id=id_table))
 
 @app.route("/new_post", methods=["GET", "POST"])
 @login_required
