@@ -17,13 +17,17 @@
 
 
   <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
 
+      <div class="col-lg-100 col-md-10 mx-auto">
+        <div class="row">
+        <div class="col-sm">
           {{ wtf.quick_form(form) }}
+        </div>
+         <div class="col-sm">
           {% for table in tables %}
-          <p><a href="{{ url_for('kanban_table', id=table.id) }}">{{table.name}}</a>{{table.description}}</p>
+          <p>Table: <a href="{{ url_for('kanban_table', id=table.id) }}">{{table.name}}</a> Description: {{table.description}}</p>
           {% endfor %}
+         </div>
       </div>
     </div>
   </div>
