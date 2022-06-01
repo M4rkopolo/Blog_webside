@@ -170,7 +170,7 @@ class CommentDB(db.Model):
         self.user_name = user_name
 
 
-# db.create_all()
+db.create_all()
 
 
 ##WTForm
