@@ -1,0 +1,61 @@
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/city.jpg')}})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Posts</h1>
+            <span class="subheading">... and comments.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <div class="container">
+    <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
+         {{ wtf.quick_form(stage_form) }}
+    </div>
+      <div class="col-lg-15 col-md-10 mx-auto">
+          <div class="row">
+          {% for stage in stages %}
+            <div class="col-sm">
+          <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
+              <div style="color:grey; border:2px dotted; border-radius:10px;margin-top: 10px;margin-bottom: 10px; padding:0.01em 16px;">
+              <p style="margin-top: 10px; margin-bottom: 10px;">{{stage.name}}</p>
+              </div>
+              {% for note in notes if note.stage_name == stage.name %}
+              <div style="padding:5px">
+              <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
+                  <div class="row">
+                   <div class="col-sm" style="min-width: 80%;">
+                     <p style="font-size: 15px;margin-top: 2px; margin-bottom: 2px;">{{note.content}}</p>
+                     <p style="font-size: 10px;margin-top: 2px; margin-bottom: 2px;">{{note.date[:10]}}</p>
+                    </div>
+                    <div class="col-sm">
+                       <input class="btn btn-default" style="width: 44px;margin:1px; padding:1px;" value="🗑">
+                        <input class="btn btn-default" style="width: 44px;margin:1px; padding:1px;" value=">">
+                    </div>
+                      </div>
+              </div>
+              </div>
+              {% endfor %}
+              <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;margin-top: 10px;margin-bottom: 10px;">
+              {% if stages.index(stage)==0 %}
+                 {{ wtf.quick_form(note_form) }}
+              {% endif %}
+              </div>
+            </div>
+            </div>
+         {% endfor %}
+          </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+{% include "footer.html" %}

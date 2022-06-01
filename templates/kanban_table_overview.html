@@ -1,0 +1,31 @@
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/city.jpg')}})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Posts</h1>
+            <span class="subheading">... comments and kanban table .</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+          {{ wtf.quick_form(form) }}
+          {% for table in tables %}
+          <p><a href="{{ url_for('kanban_table', id=table.id) }}">{{table.name}}</a>{{table.description}}</p>
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+
+{% include "footer.html" %}
