@@ -230,7 +230,7 @@ class KanbanStageForm(FlaskForm):
 class KanbanForm(FlaskForm):
     kanban_table_name = StringField("Table_Name", validators=[DataRequired()])
     kanban_table_descripton = StringField("Table_Descripton")
-    kanban_access_users = StringField("Accesed_Users", validators=[DataRequired()])
+    # kanban_access_users = StringField("Accesed_Users", validators=[DataRequired()])
     submit = SubmitField("Add Kanban Table")
 
 
@@ -276,7 +276,7 @@ def reset_token(token):
         user.password = new_password
         db.session.commit()
         return redirect(url_for('login'))
-    return render_template('new_password.html', form=form)
+    return render_template('new_password.html', form=form, logged_in=current_user.is_authenticated)
 
 
 @app.route("/kanban_tables", methods=["GET", "POST"])
@@ -298,7 +298,7 @@ def kanban_tables_overview():
         db.session.add(first_stage)
         db.session.commit()
         return redirect(url_for('kanban_tables_overview'))
-    return render_template("kanban_table_overview.html", form=form, tables=tables)
+    return render_template("kanban_table_overview.html", form=form, tables=tables, logged_in=current_user.is_authenticated)
 
 
 @app.route("/kanban_table/<int:id>", methods=["GET", "POST"])
@@ -324,7 +324,7 @@ def kanban_table(id):
         db.session.commit()
         return redirect(url_for('kanban_table', id=id))
     return render_template("kanban_table.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
-                           notes=notes)
+                           notes=notes, logged_in=current_user.is_authenticated)
 
 
 @app.route('/register', methods=['GET', 'POST'])

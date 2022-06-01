@@ -21,9 +21,11 @@
          {{ wtf.quick_form(stage_form) }}
     </div>
       <div>
-          <div class="row">
+          <div style="height: 90%; display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;" class="row">
           {% for stage in stages %}
-            <div class="col-sm">
+            <div style="max-width: 400px; padding: 1%; flex: 0 0 auto;" class="col-sm">
           <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
               <div style="color:grey; border:2px dotted; border-radius:10px;margin-top: 10px;margin-bottom: 10px; padding:0.01em 16px;">
               <p style="margin-top: 10px; margin-bottom: 10px;">{{stage.name}}</p>
@@ -37,9 +39,13 @@
                      <p style="font-size: 10px;margin-top: 2px; margin-bottom: 2px;">{{note.date[:10]}}</p>
                     </div>
                     <div class="col-sm">
-                        <a href="{{url_for('delete_note', id=note.id, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 44px;margin:1px; padding:1px;" >🗑</a>
-                        <a href="{{url_for('move_note',id=note.id, stage=stages[stages.index(stage)+1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 44px;margin:1px; padding:1px;" > > </a>
-                        <a href="{{url_for('move_note',id=note.id, stage=stages[stages.index(stage)-1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 44px;margin:1px; padding:1px;" > < </a>
+                        <a href="{{url_for('delete_note', id=note.id, id_table=note.kanban_table)}}" class="btn btn-default" style="display: flex;width: 44px;margin:1px; padding:1px;" >🗑</a>
+                        {% if stages.index(stage)-1 >= 0 %}
+                        <a  href="{{url_for('move_note',id=note.id, stage=stages[stages.index(stage)-1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 10px;margins:1px; padding:1px;" > < </a>
+                        {% endif %}
+                        {% if stages.index(stage)+1 < stages|length %}
+                        <a href="{{url_for('move_note',id=note.id, stage=stages[stages.index(stage)+1].name, id_table=note.kanban_table)}}" class="btn btn-default" style=" width: 10px;margins:1px; padding:1px;" > > </a>
+                        {% endif %}
 
                    <!--    <input class="btn btn-default" style="width: 44px;margin:1px; padding:1px;" value=">"> -->
                     </div>
