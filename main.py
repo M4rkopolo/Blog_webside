@@ -396,7 +396,7 @@ def show_post(id):
     rights = False
     if current_user.is_authenticated:
         rights = True if current_user.id == requested_post.post_id else False
-    if comments_form.validate_on_submit():
+    if comments_form.validate_on_submit() and current_user.is_authenticated:
         print("current_user.user_name")
         new_comment = CommentDB(comment=comments_form.comment.data,
                                 user_name=current_user.user_name,
