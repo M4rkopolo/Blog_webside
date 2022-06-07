@@ -25,7 +25,7 @@
         </div>
          <div class="col-sm">
           {% for table in tables %}
-          <p>Table: <a href="{{ url_for('kanban_table', id=table.id) }}">{{table.name}}</a> Description: {{table.description}}</p>
+          <p>Table: <a href="{{ url_for('kanban.kanban_table', id=table.id) }}">{{table.name}}</a> Description: {{table.description}}</p>
           {% endfor %}
          </div>
       </div>
