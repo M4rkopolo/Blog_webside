@@ -1,12 +1,11 @@
-from flask_login import login_user, current_user, logout_user,LoginManager
-from flask import Flask, render_template, redirect, url_for, flash, request, Blueprint
-from werkzeug.security import generate_password_hash, check_password_hash
+from flaskblog import db, login_manager
 from flaskblog.users.db_model import User
 from flaskblog.users.forms import NewUser,NewPassword, LoginForm, ResetPasword
-from flaskblog import db, login_manager
-from datetime import date
-from flask_mail import Mail, Message
 from flaskblog.util.utils import send_reset_email
+from flask_login import login_user, current_user, logout_user
+from flask import render_template, redirect, url_for, flash, Blueprint
+from werkzeug.security import generate_password_hash, check_password_hash
+
 users = Blueprint("users", __name__,)
 
 @login_manager.user_loader
@@ -17,14 +16,12 @@ def load_user(user_id):
 def register():
     new_user = NewUser()
     if new_user.validate_on_submit():
-        # add check if user already exist
         new_user_db = User(
             user_name=new_user.user_name.data,
             email=new_user.email.data,
             password=new_user.password.data, )
         db.session.add(new_user_db)
         db.session.commit()
-
         return redirect(url_for('posts.get_all_posts'))
     return render_template('register.html', form=new_user, logged_in=current_user.is_authenticated)
 
@@ -39,7 +36,7 @@ def login():
             flash("User with this address email does not exist")
             return render_template('login.html',
                                    flash=flash,
-                                   form=login_form, )
+                                   form=login_form)
         else:
             if check_password_hash(user.password, password):
                 login_user(user)

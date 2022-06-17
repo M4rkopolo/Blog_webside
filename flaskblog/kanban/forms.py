@@ -1,6 +1,5 @@
-from flask import Blueprint
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, URL
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 
 class NoteForm(FlaskForm):

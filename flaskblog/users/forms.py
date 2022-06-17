@@ -1,7 +1,7 @@
-from flask import Blueprint, flash
+from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, URL
+from wtforms.validators import DataRequired
 from flaskblog.users.db_model import User
 
 class NewUser(FlaskForm):

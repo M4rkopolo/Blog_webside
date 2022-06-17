@@ -1,5 +1,5 @@
 from flask_login import login_required, current_user
-from flask import Flask, render_template, redirect, url_for, flash, request, Blueprint
+from flask import render_template, redirect, url_for, request, Blueprint
 from flaskblog.kanban.forms import KanbanForm, NoteForm, KanbanStageForm
 from flaskblog.kanban.db_model import Kanban_Table, Stage, Note
 from flaskblog import db

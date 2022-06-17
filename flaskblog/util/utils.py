@@ -1,23 +1,7 @@
+from flask import url_for
+from flaskblog import mail
 import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from flask import Flask, render_template, redirect, url_for, flash, request
-from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, URL
-from flask_ckeditor import CKEditor, CKEditorField
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-import os
-from flask_mail import Mail, Message
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from datetime import date
-import datetime
-from flask_mail import Mail, Message
-
-
+from flask_mail import Message
 
 def now():
     return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
