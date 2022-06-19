@@ -1,8 +1,8 @@
 from flask_login import login_required, current_user
 from flask import render_template, redirect, url_for,Blueprint
-from ..posts.forms import CommentForm, CreatePostForm
-from ..posts.db_model import CommentDB, BlogPost
-from . import db
+from posts.forms import CommentForm, CreatePostForm
+from posts.db_model import CommentDB, BlogPost
+from main import db
 from datetime import date
 
 # from flaskblog.modules import CommentDB, BlogPost, Kanban_Table, Stage, Note, db

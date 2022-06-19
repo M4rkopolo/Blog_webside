@@ -1,4 +1,4 @@
-from .. import db
+from main import db
 
 # db = SQLAlchemy()
 

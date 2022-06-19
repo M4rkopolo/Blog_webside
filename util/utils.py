@@ -1,5 +1,5 @@
 from flask import url_for
-from .. import mail
+from main import mail
 import datetime
 from flask_mail import Message
 
