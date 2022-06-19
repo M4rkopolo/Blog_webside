@@ -1,4 +1,4 @@
-from flaskblog import db
+from .. import db
 
 # db = SQLAlchemy()
 

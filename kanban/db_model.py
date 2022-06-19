@@ -1,5 +1,5 @@
-from flaskblog import db
-from flaskblog.util.utils import PSTNow
+from .. import db
+from ..util.utils import PSTNow
 
 class Note(db.Model):
     __tablename__ = "kanban_note"

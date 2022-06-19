@@ -1,7 +1,7 @@
-from flaskblog import login_manager, db
-from flaskblog.users.db_model import User
-from flaskblog.users.forms import NewUser,NewPassword, LoginForm, ResetPasword
-from flaskblog.util.utils import send_reset_email
+from .. import login_manager, db
+from ..users.db_model import User
+from ..users.forms import NewUser,NewPassword, LoginForm, ResetPasword
+from ..util.utils import send_reset_email
 from flask_login import login_user, current_user, logout_user
 from flask import render_template, redirect, url_for, flash, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash

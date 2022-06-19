@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mail import Mail
-from flaskblog.configuration import Config
+from .configuration import Config
 # from flaskblog.modules import db
 
 ckeditor = CKEditor()
@@ -27,10 +27,10 @@ def current_app(config_class=Config):
     mail.init_app(app)
     ckeditor.init_app(app)
 
-    from flaskblog.users.routes import users
-    from flaskblog.posts.routes import posts
-    from flaskblog.kanban.routes import kanban
-    from flaskblog.main.routes import main
+    from .users.routes import users
+    from .posts.routes import posts
+    from .kanban.routes import kanban
+    from .main.routes import main
     app.register_blueprint(main)
     app.register_blueprint(users)
     app.register_blueprint(posts)

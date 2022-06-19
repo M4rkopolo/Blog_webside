@@ -2,7 +2,7 @@ from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired
-from flaskblog.users.db_model import User
+from ..users.db_model import User
 # from flaskblog.modules import User
 
 class NewUser(FlaskForm):

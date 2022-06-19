@@ -1,4 +1,4 @@
-from flaskblog import current_app
+from . import current_app
 
 app = current_app()
 
