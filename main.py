@@ -1,6 +1,6 @@
 from main import current_app
 app = current_app()
-
+print("app")
 if __name__ == "__main__":
     app.run(debug=True)
 # # app = current_app()
