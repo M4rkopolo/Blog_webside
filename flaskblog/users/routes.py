@@ -1,4 +1,4 @@
-from flaskblog import db, login_manager
+from flaskblog import login_manager, db
 from flaskblog.users.db_model import User
 from flaskblog.users.forms import NewUser,NewPassword, LoginForm, ResetPasword
 from flaskblog.util.utils import send_reset_email

@@ -1,10 +1,10 @@
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import Blueprint
+# from flask import Blueprint
 from flask_login import UserMixin
 from flaskblog import db, current_app
 from werkzeug.security import generate_password_hash
 
-users_db = Blueprint("users_db", __name__)
+# users_db = Blueprint("users_db", __name__)
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
