@@ -5,7 +5,9 @@ from flaskblog.posts.db_model import CommentDB, BlogPost
 from flaskblog import db
 from datetime import date
 
-posts= Blueprint('posts', __name__)
+# from flaskblog.modules import CommentDB, BlogPost, Kanban_Table, Stage, Note, db
+
+posts = Blueprint('posts', __name__)
 
 @posts.route('/')
 def get_all_posts():

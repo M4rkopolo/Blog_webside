@@ -1,5 +1,7 @@
 from flaskblog import db
 
+# db = SQLAlchemy()
+
 class BlogPost(db.Model):
     __tablename__ = 'posts'
 

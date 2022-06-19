@@ -5,15 +5,21 @@ from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mail import Mail
 from flaskblog.configuration import Config
+# from flaskblog.modules import db
 
 ckeditor = CKEditor()
 login_manager = LoginManager()
 db = SQLAlchemy()
 mail = Mail()
 
+
 def current_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    @app.before_first_request
+    def initialize_database():
+        db.create_all()
 
     login_manager.init_app(app)
     Bootstrap(app)

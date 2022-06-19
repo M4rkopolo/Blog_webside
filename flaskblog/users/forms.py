@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired
 from flaskblog.users.db_model import User
+# from flaskblog.modules import User
 
 class NewUser(FlaskForm):
     user_name = StringField("User name", validators=[DataRequired()])
