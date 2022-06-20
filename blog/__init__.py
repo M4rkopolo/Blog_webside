@@ -5,6 +5,7 @@ from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mail import Mail
 from blog.main.configuration import Config
+import psycopg2
 # from flaskblog.modules import db
 
 ckeditor = CKEditor()
