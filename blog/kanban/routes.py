@@ -10,7 +10,7 @@ kanban = Blueprint("kanban", __name__)
 @login_required
 def kanban_tables_overview():
     form = KanbanForm()
-    tables = Kanban_Table.query.filter_by(owner_user_name=current_user.user_name).all()
+    tables = Kanban_Table.query.all()#filter_by(owner_user_name=current_user.user_name).all()
     if form.validate_on_submit():
         new_kanban_table = Kanban_Table(name=form.kanban_table_name.data,
                                         description=form.kanban_table_descripton.data,
