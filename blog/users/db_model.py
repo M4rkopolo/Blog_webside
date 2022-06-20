@@ -13,10 +13,10 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(100))
     user_name = db.Column(db.String(1000))
     image_file = db.Column(db.String(30), nullable=False, default="default.jpg")
-    posts = db.relationship("blog.posts.BlogPost", backref="user")
-    comments = db.relationship("blog.posts.CommentDB", backref="post")
-    kanban_table_own = db.relationship("blog.kanban.Kanban_Table", backref="table_owner_user")
-    kanban_table_note = db.relationship("blog.kanban.Note", backref="note_owner_user")
+    posts = db.relationship("BlogPost", backref="user")
+    comments = db.relationship("CommentDB", backref="post")
+    kanban_table_own = db.relationship("Kanban_Table", backref="table_owner_user")
+    kanban_table_note = db.relationship("Note", backref="note_owner_user")
 
 
     def __init__(self, email, password, user_name):
