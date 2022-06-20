@@ -1,4 +1,5 @@
 import click
+from flask.cli import with_appcontext
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -14,15 +15,17 @@ login_manager = LoginManager()
 db = SQLAlchemy()
 mail = Mail()
 
+@click.command(name="create_tables")
+@with_appcontext
+    #@app.before_first_request
+def create_tables():
+    db.create_all()
 
 def current_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    @click.command(name="create_tables")
-    @app.before_first_request
-    def initialize_database():
-        db.create_all()
+
 
     login_manager.init_app(app)
     Bootstrap(app)
