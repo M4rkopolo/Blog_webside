@@ -5,8 +5,6 @@ from blog.posts.db_model import CommentDB, BlogPost
 from blog import db
 from datetime import date
 
-# from flaskblog.modules import CommentDB, BlogPost, Kanban_Table, Stage, Note, db
-
 posts = Blueprint('posts', __name__)
 
 @posts.route('/')

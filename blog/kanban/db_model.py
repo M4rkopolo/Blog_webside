@@ -1,8 +1,10 @@
 from blog import db
 from blog.util.utils import PSTNow
 
+
 class Note(db.Model):
     __tablename__ = "kanban_note"
+
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(100), nullable=False)
     stage_name = db.Column(db.String(30), db.ForeignKey('kanban_stage.name'))
@@ -26,8 +28,6 @@ class Stage(db.Model):
     inside_kanban_table = db.Column(db.Integer, db.ForeignKey('kanban_table.id'))
 
 
-# user_name = db.Column(db.String, db.ForeignKey(user_name))
-
 class Kanban_Table(db.Model):
     __tablename__ = "kanban_table"
 
@@ -37,5 +37,4 @@ class Kanban_Table(db.Model):
     stages = db.relationship("Stage", backref="kanban_table")
     notes = db.relationship("Note", backref="kanban_notes")
     owner_user_name = db.Column(db.String, db.ForeignKey('users.user_name'))
-    # access_users_name = db.Column(db.String, db.ForeignKey('users.user_name'))
 
