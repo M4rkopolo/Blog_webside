@@ -26,7 +26,7 @@ def show_post(id):
     if comments_form.validate_on_submit() and current_user.is_authenticated:
         new_comment = CommentDB(comment=comments_form.comment.data)
         user = User.query.filter_by(user_name=current_user.user_name).first()
-        user.comments.append(new_comment)
+        user.comments_id.append(new_comment)
         requested_post.comment_id.append(new_comment)
         db.session.add(new_comment)
         db.session.commit()

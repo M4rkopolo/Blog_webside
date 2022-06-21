@@ -7,7 +7,7 @@ class Note(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(100), nullable=False)
-    stage_name = db.Column(db.String(30), db.ForeignKey('kanban_stage.name'))
+    stage_name = db.Column(db.Integer, db.ForeignKey('kanban_stage.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date = db.Column(db.String, default=PSTNow)
     kanban_table = db.Column(db.Integer, db.ForeignKey('kanban_table.id'))
@@ -23,7 +23,7 @@ class Stage(db.Model):
     __tablename__ = "kanban_stage"
 
     id = db.Column(db.Integer, primary_key=True)
-    # notes = db.relationship("Note", backref="stage")
+    notes = db.relationship("Note", backref="stage")
     name = db.Column(db.String(30), nullable=False)
     inside_kanban_table = db.Column(db.Integer, db.ForeignKey('kanban_table.id'))
 
@@ -34,7 +34,7 @@ class Kanban_Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
     description = db.Column(db.String)
-    stages = db.relationship("Stage", backref="stages")
-    notes = db.relationship("Note", backref="notes")
-    owner_user_name = db.Column(db.String, db.ForeignKey('users.user_name'))
+    stages_id = db.relationship("Stage", backref="stages")
+    notes_id = db.relationship("Note", backref="notes")
+    owner_user_id= db.Column(db.Integer, db.ForeignKey('users.id'))
 

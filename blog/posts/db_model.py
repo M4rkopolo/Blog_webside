@@ -33,7 +33,7 @@ class CommentDB(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String, unique=False, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_name'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
     # def __init__(self, comment, user_name, post_id):
