@@ -23,7 +23,7 @@ class Stage(db.Model):
     __tablename__ = "kanban_stage"
 
     id = db.Column(db.Integer, primary_key=True)
-    notes = db.relationship("Note", backref="stage")
+    notes = db.relationship("Note", backref="kanban_stage")
     name = db.Column(db.String(30), nullable=False)
     inside_kanban_table = db.Column(db.Integer, db.ForeignKey('kanban_table.id'))
 
