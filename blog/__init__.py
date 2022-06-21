@@ -23,9 +23,9 @@ def current_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # @app.before_first_request
-    # def create_tables():
-    #     db.create_all()
+    @app.before_first_request
+    def create_tables():
+        db.create_all()
 
     login_manager.init_app(app)
     Bootstrap(app)
