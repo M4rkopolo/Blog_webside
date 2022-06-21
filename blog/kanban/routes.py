@@ -49,7 +49,7 @@ def kanban_table(id):
         new_stage = Stage(name = stage_form.stage_name.data,
                           inside_kanban_table = id)
         table = Kanban_Table.query.filter_by(id=id).first()
-        table.stages.append(new_stage)
+        table.stages_id.append(new_stage)
         db.session.add(new_stage)
         db.session.commit()
         return redirect(url_for('kanban.kanban_table', id=id))
