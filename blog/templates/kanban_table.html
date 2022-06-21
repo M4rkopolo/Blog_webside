@@ -40,10 +40,10 @@
                     </div>
                     <div class="col-sm">
                         <a href="{{url_for('kanban.delete_note', id=note.id, id_table=note.kanban_table)}}" class="btn btn-default" style="display: flex;width: 44px;margin:1px; padding:1px;" >🗑</a>
-                        {% if stages.index(stage)-1 >= 0 %}
+                        {% if stages.index(stage) or stages.index(stage)-1 >= 0 %}
                         <a  href="{{url_for('kanban.move_note',id=note.id, stage=stages[stages.index(stage)-1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 10px;margins:1px; padding:1px;" > < </a>
                         {% endif %}
-                        {% if stages.index(stage)+1 < stages|length %}
+                        {% if stages.index(stage) or stages.index(stage)+1 < stages|length %}
                         <a href="{{url_for('kanban.move_note',id=note.id, stage=stages[stages.index(stage)+1].name, id_table=note.kanban_table)}}" class="btn btn-default" style=" width: 10px;margins:1px; padding:1px;" > > </a>
                         {% endif %}
 
