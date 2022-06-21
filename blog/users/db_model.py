@@ -11,7 +11,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    user_name = db.Column(db.String(1000))
+    user_name = db.Column(db.String(100))
     image_file = db.Column(db.String(30), nullable=False, default="default.jpg")
     posts = db.relationship("BlogPost", backref="user_posts")
     comments = db.relationship("CommentDB", backref="user_comments")
