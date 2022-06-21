@@ -12,7 +12,7 @@ class BlogPost(db.Model):
     body = db.Column(db.Text, nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    comment_id = db.relationship("CommentDB", backref="posts")
+    comment_id = db.relationship("CommentDB", backref="post_comments")
 
     def __init__(self, post_id, title, subtitle, date, body, img_url, author):
         self.title = title
