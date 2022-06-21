@@ -2,6 +2,7 @@ from flask_login import login_required, current_user
 from flask import render_template, redirect, url_for,Blueprint
 from blog.posts.forms import CommentForm, CreatePostForm
 from blog.posts.db_model import CommentDB, BlogPost
+from blog.users.db_model import User
 from blog import db
 from datetime import date
 
@@ -23,10 +24,10 @@ def show_post(id):
     if current_user.is_authenticated:
         rights = True if current_user.id == requested_post.post_id else False
     if comments_form.validate_on_submit() and current_user.is_authenticated:
-        print("current_user.user_name")
-        new_comment = CommentDB(comment=comments_form.comment.data,
-                                user_name=current_user.user_name,
-                                post_id=id)
+        new_comment = CommentDB(comment=comments_form.comment.data)
+        user = User.query.filter_by(user_name=current_user.user_name).first()
+        user.comments.append(new_comment)
+        requested_post.comment_id.append(new_comment)
         db.session.add(new_comment)
         db.session.commit()
         return redirect(url_for('posts.show_post', id=id))
@@ -46,11 +47,12 @@ def add_new_post():
         new_post_db = BlogPost(
             title=new_post_form.title.data,
             subtitle=new_post_form.subtitle.data,
-            author=current_user.user_name,
             img_url=new_post_form.img_url.data,
             date=date.today().strftime("%B %d, %Y"),
             body=new_post_form.body.data,
-            post_id=user_id)
+            author=current_user.user_name)
+        user = User.query.filter_by(user_name=current_user.user_name).first()
+        user.posts.append(new_post_db)
         db.session.add(new_post_db)
         db.session.commit()
         return redirect(url_for('posts.get_all_posts'))
