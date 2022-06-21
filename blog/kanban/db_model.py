@@ -35,6 +35,6 @@ class Kanban_Table(db.Model):
     name = db.Column(db.String(30), nullable=False)
     description = db.Column(db.String)
     stages = db.relationship("Stage", backref="kanban_table")
-    notes = db.relationship("Note", backref="kanban_notes")
+    notes = db.relationship("Note", backref="kanban_table")
     owner_user_name = db.Column(db.String, db.ForeignKey('users.user_name'))
 
