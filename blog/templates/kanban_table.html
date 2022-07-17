@@ -18,53 +18,63 @@
 
   <div class="container">
     <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
-         {{ wtf.quick_form(stage_form) }}
+        <label class="control-label" for="stage_name">Stage_Name</label>
+         <!-- {{ wtf.quick_form(stage_form) }} -->
+      <form method="POST" action="{{url_for('kanban.new_stages',table_id=table_id)}}">
+                     {{ stage_form.hidden_tag() }}
+                     {{ stage_form.stage_name(class="form-control") }}
+                     {{ stage_form.submit(class="btn btn-default") }}
+        </form>
     </div>
       <div>
           <div style="height: 90%; display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;" class="row">
-          {% for stage in stages %}
+
+              {% for stage in stages %}
+
             <div style="max-width: 400px; padding: 1%; flex: 0 0 auto;" class="col-sm">
-          <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
-              <div style="color:grey; border:2px dotted; border-radius:10px;margin-top: 10px;margin-bottom: 10px; padding:0.01em 16px;">
-              <p style="margin-top: 10px; margin-bottom: 10px;">{{stage.name}}</p>
-              </div>
-              {% for note in notes if note.stage_name == stage.name %}
-              <div style="padding:5px">
               <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
-                  <div class="row">
-                   <div class="col-sm" style="min-width: 70%;">
-                     <p style="font-size: 15px;margin-top: 2px; margin-bottom: 2px;">{{note.content}}</p>
-                     <p style="font-size: 10px;margin-top: 2px; margin-bottom: 2px;">{{note.date[:10]}}</p>
-                    </div>
-                    <div class="col-sm">
+                <div style="color:grey; border:2px dotted; border-radius:10px;margin-top: 10px;margin-bottom: 10px; padding:0.01em 16px;">
+                  <p style="margin-top: 10px; margin-bottom: 10px;">{{stage.name}}</p>
+                </div>
+              {% for note in notes if note.stage_name == stage.id %}
+                <div style="padding:5px">
+                  <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
+                    <div class="row">
+
+                      <div class="col-sm" style="min-width: 70%;">
+                        <p style="font-size: 15px;margin-top: 2px; margin-bottom: 2px;">{{note.content}}</p>
+                        <p style="font-size: 10px;margin-top: 2px; margin-bottom: 2px;">{{note.date[:10]}}</p>
+                      </div>
+                      <div class="col-sm">
                         <a href="{{url_for('kanban.delete_note', id=note.id, id_table=note.kanban_table)}}" class="btn btn-default" style="display: flex;width: 44px;margin:1px; padding:1px;" >🗑</a>
                         {% if stages.index(stage) or stages.index(stage)-1 >= 0 %}
-                        <a  href="{{url_for('kanban.move_note',id=note.id, stage=stages[stages.index(stage)-1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 10px;margins:1px; padding:1px;" > < </a>
-                        {% endif %}
-                        {% if stages.index(stage) or stages.index(stage)+1 < stages|length %}
-                        <a href="{{url_for('kanban.move_note',id=note.id, stage=stages[stages.index(stage)+1].name, id_table=note.kanban_table)}}" class="btn btn-default" style=" width: 10px;margins:1px; padding:1px;" > > </a>
+                        <a href="{{url_for('kanban.move_note',note_id=note.id,current_stage=stage.name, stages=stages, next_stage=stages[stages.index(stage)-1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 10px;margins:1px; padding:1px;" > < </a>
+
+                          {% endif %}
+                        {% if stages.index(stage)+1 < stages|length %}
+                        <a href="{{url_for('kanban.move_note',note_id=note.id,current_stage=stage.name,stages=stages, next_stage=stages[stages.index(stage)+1].name, id_table=note.kanban_table)}}" class="btn btn-default" style=" width: 10px;margins:1px; padding:1px;" > > </a>
                         {% endif %}
 
-                   <!--    <input class="btn btn-default" style="width: 44px;margin:1px; padding:1px;" value=">"> -->
-                    </div>
                       </div>
-              </div>
-              </div>
+                    </div>
+                  </div>
+                </div>
               {% endfor %}
-              {% if stages.index(stage)==0 %}
-              <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;margin-top: 10px;margin-bottom: 10px;">
-                 {{ wtf.quick_form(note_form) }}
+              <!-- div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;margin-top: 10px;margin-bottom: 10px;"> -->
+                 <form method="POST" action="{{url_for('kanban.new_notes',stage_id=stage.id,table_id=table_id)}}">
+                        {{ note_form.hidden_tag() }}
+                     {{ note_form.note_content(class="form-control")}}
+                     {{ note_form.submit(class="btn btn-default") }}
+                 </form>
+                  <p>{{ stages}} </p>
+              <!-- </div> -->
               </div>
-              {% endif %}
             </div>
-            </div>
-         {% endfor %}
+           {% endfor %}
           </div>
      </div>
     </div>
-   </div>
-  </div>
 
 {% include "footer.html" %}

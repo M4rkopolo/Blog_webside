@@ -1,0 +1,29 @@
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/city.jpg')}})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Posts</h1>
+            <span class="subheading">... and comments.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+ <p>note {{note}}</p>
+<p>move_note_to_stage {{move_note_to_stage}}</p>
+<p>stages {{stages}}</p>
+<p>del_note_in_stage {{del_note_in_stage}} </p>
+<p>note_id {{note_id}}</p>
+<p>del_note_in_stage {{del_note_in_stage}}</p>
+<p></p>
+
+
+
+{% include "footer.html" %}

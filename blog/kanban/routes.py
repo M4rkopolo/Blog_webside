@@ -19,11 +19,6 @@ def kanban_tables_overview():
         user.kanban_table_own.append(new_kanban_table)
         db.session.add(new_kanban_table)
         db.session.commit()
-        # first_stage = Stage(
-        #     name="to do")
-        # new_kanban_table.stages.append(first_stage)
-        # db.session.add(first_stage)
-        # db.session.commit()
         return redirect(url_for('kanban.kanban_tables_overview'))
     return render_template("kanban_table_overview.html", form=form, tables=tables, logged_in=current_user.is_authenticated)
 
@@ -32,53 +27,61 @@ def kanban_tables_overview():
 def kanban_table(id):
     note_form = NoteForm()
     stage_form = KanbanStageForm()
+    notes = []
     exist_stages = Stage.query.filter_by(inside_kanban_table=id).all()
-    notes = Note.query.filter_by(kanban_table=id).first()
-    if note_form.validate_on_submit():
-        new_note = Note(
-            content=note_form.note_content.data,
-            stage_name=exist_stages[0].name)
-        table = Kanban_Table.query.filter_by(id=id).first()
-        table.notes.append(new_note)
-        user = User.query.filter_by(user_name=current_user.user_name).first()
-        user.kanban_table_note.append(new_note)
-        db.session.add(new_note)
-        db.session.commit()
-        return redirect(url_for('kanban.kanban_table', id=id))
+    notes = Note.query.filter_by(kanban_table=id).all()
+    return render_template("kanban_table.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
+                           notes=notes,table_id=id, logged_in=current_user.is_authenticated)
+    # return render_template("for_tests.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
+    #                        notes=notes, table_id=id, logged_in=current_user.is_authenticated)
+
+
+@kanban.route("/kanban_table/new_stage", methods=["GET", "POST"])
+@login_required
+def new_stages():
+    stage_form = KanbanStageForm()
+    table_id = request.args.get("table_id")
     if stage_form.validate_on_submit():
-        new_stage = Stage(name = stage_form.stage_name.data,
-                          inside_kanban_table = id)
-        table = Kanban_Table.query.filter_by(id=id).first()
+        new_stage = Stage(
+            name=stage_form.stage_name.data)
+        table = Kanban_Table.query.filter_by(id=table_id).first()
         table.stages_id.append(new_stage)
         db.session.add(new_stage)
         db.session.commit()
-        return redirect(url_for('kanban.kanban_table', id=id))
-    return render_template("kanban_table.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
-                           notes=notes, logged_in=current_user.is_authenticated)
+        return redirect(url_for('kanban.kanban_table', id=table_id))
+    return redirect(url_for('kanban.kanban_table', id=table_id))
 
-# @kanban.route("/kanban_table/<int:id>", methods=["GET", "POST"])
-# @login_required
-# def new_note(id):
-#     if note_form.validate_on_submit():
-#         new_note = Note(
-#             content=note_form.note_content.data,
-#             stage_name=exist_stages[0].name)
-#         table = Kanban_Table.query.filter_by(id=id).first()
-#         table.notes.append(new_note)
-#         user = User.query.filter_by(user_name=current_user.user_name).first()
-#         user.kanban_table_note.append(new_note)
-#         db.session.add(new_note)
-#         db.session.commit()
-#         return redirect(url_for('kanban.kanban_table', id=id))
+
+@kanban.route("/kanban_table/new_notes", methods=["GET", "POST"])
+@login_required
+def new_notes():
+    note_form = NoteForm()
+    stage_id = request.args.get("stage_id")
+    table_id = request.args.get("table_id")
+    if note_form.validate_on_submit():
+        new_note = Note(
+            content=note_form.note_content.data)
+        table = Kanban_Table.query.filter_by(id=table_id).first()
+        table.notes_id.append(new_note)
+        user = User.query.filter_by(user_name=current_user.user_name).first()
+        user.kanban_table_note.append(new_note)
+        stage = Stage.query.filter_by(id=stage_id).first()
+        stage.notes.append(new_note)
+        db.session.add(new_note)
+        db.session.commit()
+        return redirect(url_for('kanban.kanban_table', id=table_id))
+    return redirect(url_for('kanban.kanban_table', id=table_id))
 
 @kanban.route("/move_note", methods=["GET"])
 def move_note():
-    id = request.args.get('id')
-    id_table = request.args.get("id_table")
-    note_id = Note.query.filter_by(id=id).first()
-    note_id.stage_name = request.args.get('stage')
+    note_id = request.args.get('note_id')
+    table_id = request.args.get("id_table")
+    next_stage = request.args.get("next_stage")
+    note = Note.query.filter_by(id=note_id).first()
+    move_note_to_stage = Stage.query.filter_by(name=next_stage).first()
+    move_note_to_stage.notes.append(note)
     db.session.commit()
-    return redirect(url_for('kanban.kanban_table', id=id_table))
+    return redirect(url_for('kanban.kanban_table', id=table_id))
 
 @kanban.route("/delete_note", methods=["GET"])
 def delete_note():
