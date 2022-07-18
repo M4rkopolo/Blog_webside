@@ -25,14 +25,17 @@ def kanban_tables_overview():
 @kanban.route("/kanban_table/<int:id>", methods=["GET", "POST"])
 @login_required
 def kanban_table(id):
-    note_form = NoteForm()
-    stage_form = KanbanStageForm()
-    notes = []
-    exist_stages = Stage.query.filter_by(inside_kanban_table=id).all()
-    notes = Note.query.filter_by(kanban_table=id).all()
-    return render_template("kanban_table.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
+    user = User.query.get(current_user.id)
+    user_access = user.kanban_table_own
+    board = Kanban_Table.query.filter_by(id=id).first()
+    if board in user_access:
+        note_form = NoteForm()
+        stage_form = KanbanStageForm()
+        exist_stages = Stage.query.filter_by(inside_kanban_table=id).all()
+        notes = Note.query.filter_by(kanban_table=id).all()
+        return render_template("kanban_table.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
                            notes=notes,table_id=id, logged_in=current_user.is_authenticated)
-
+    return redirect(url_for('kanban.kanban_tables_overview'))
 
 @kanban.route("/kanban_table/new_stage", methods=["GET", "POST"])
 @login_required
