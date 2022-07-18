@@ -1,60 +1,119 @@
 {% include "header.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/city.jpg')}})">
+  <header class="masthead" style="max-height:50px;margin-bottom: 0px;">
     <div class="overlay"></div>
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
-            <h1>Posts</h1>
-            <span class="subheading">... and comments.</span>
           </div>
-        </div>
-      </div>
     </div>
   </header>
 
 
-  <div class="container">
-    <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
-        <label class="control-label" for="stage_name">Stage_Name</label>
-         <!-- {{ wtf.quick_form(stage_form) }} -->
+  <div style="max-width:100%;background-image: url({{ url_for('static', filename='img/city.jpg')}}">
+    <div style="color:grey; padding:16px 16px;max-width:400px;">
       <form method="POST" action="{{url_for('kanban.new_stages',table_id=table_id)}}">
                      {{ stage_form.hidden_tag() }}
-                     {{ stage_form.stage_name(class="form-control") }}
+                     {{ stage_form.stage_name(class="form-control", style="background-color:rgba(255,255,255,0.7)") }}
                      {{ stage_form.submit(class="btn btn-default") }}
         </form>
     </div>
       <div>
-          <div style="height: 90%; display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;" class="row">
-
+          <div style="height: 90%; display: flex; flex-wrap: nowrap; overflow-x: auto;">
               {% for stage in stages %}
-
             <div style="max-width: 400px; padding: 1%; flex: 0 0 auto;" class="col-sm">
-              <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
-                <div style="color:grey; border:2px dotted; border-radius:10px;margin-top: 10px;margin-bottom: 10px; padding:0.01em 16px;">
-                  <p style="margin-top: 10px; margin-bottom: 10px;">{{stage.name}}</p>
-                </div>
+              <div style="color:grey;min-height: 500px; padding:16px 16px;">
+                <div style="background-color: rgba(255,255,255,0.2);color:white; border:1px solid; padding:5px 5px;">
+                  <div style="display: flex; max-width:100%">
+                    <p style="font-size: 14px;
+                            font-weight: 800;
+                            padding: 15px 25px;
+                            letter-spacing: 1px;
+                            text-transform: uppercase;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:black;
+                            margin-top: 5px;
+                            margin-bottom: 5px;">{{stage.name}}</p>
+                      <a href="{{url_for('kanban.delete_stage', id=stage.id, id_table=stage.inside_kanban_table)}}" class="btn btn-default"
+                       style="color:white;
+                            font-size: 20px;
+                            font-weight: 800;
+                            padding: 10px 10px ;
+                            letter-spacing: 1px;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:black;margin-top: 5px; margin-bottom: 5px;">X</a>
+                  </div>
               {% for note in notes if note.stage_name == stage.id %}
-                <div style="padding:5px">
-                  <div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;">
-                    <div class="row">
-
-                      <div class="col-sm" style="min-width: 70%;">
-                        <p style="font-size: 15px;margin-top: 2px; margin-bottom: 2px;">{{note.content}}</p>
-                        <p style="font-size: 10px;margin-top: 2px; margin-bottom: 2px;">{{note.date[:10]}}</p>
+                <div style="padding:5px 0px;">
+                  <div style="color:white; border:1px solid;">
+                    <div class="row" style="padding:0px 14px;">
+                      <div class="col-sm" style="padding:5px 5px;min-width: 65%;background-color:rgba(255,255,255,0.5)">
+                        <p style="font-size: 14px;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:black;margin-top: 5px; margin-bottom: 5px;">{{note.content}}</p>
+                        <p style="font-size: 10px;
+                            letter-spacing: 1px;
+                            text-transform: uppercase;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:black;margin-top: 5px; margin-bottom: 5px;">{{note.date[:10]}}</p>
                       </div>
-                      <div class="col-sm">
-                        <a href="{{url_for('kanban.delete_note', id=note.id, id_table=note.kanban_table)}}" class="btn btn-default" style="display: flex;width: 44px;margin:1px; padding:1px;" >🗑</a>
+                      <div style="display: flex;padding:5px 0px;" class="col-sm">
+                        <a href="{{url_for('kanban.delete_note', id=note.id, id_table=note.kanban_table)}}" class="btn btn-default"
+                           style="color:white;
+                            font-size: 20px;
+                            font-weight: 800;
+                            padding: 10px 10px ;
+                            letter-spacing: 1px;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:black;margin-top: 5px; margin-bottom: 5px;">X</a>
                         {% if stages.index(stage) or stages.index(stage)-1 >= 0 %}
-                        <a href="{{url_for('kanban.move_note',note_id=note.id,current_stage=stage.name, stages=stages, next_stage=stages[stages.index(stage)-1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="width: 10px;margins:1px; padding:1px;" > < </a>
-
+                        <a href="{{url_for('kanban.move_note',note_id=note.id,current_stage=stage.name, stages=stages, next_stage=stages[stages.index(stage)-1].name, id_table=note.kanban_table)}}" class="btn btn-default"
+                           style="
+                            font-size: 20px;
+                            font-weight: 800;
+                            padding: 10px 10px ;
+                            letter-spacing: 1px;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:black;
+                            margin-top: 5px;
+                            margin-bottom: 5px;"><</a>
+                          {% else %}
+                          <p style="
+                            font-size: 20px;
+                            font-weight: 800;
+                            padding: 10px 10px ;
+                            letter-spacing: 1px;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:gba(255,255,255,0.5);
+                            margin-top: 5px;
+                            margin-bottom: 5px;"> < </p>
                           {% endif %}
                         {% if stages.index(stage)+1 < stages|length %}
-                        <a href="{{url_for('kanban.move_note',note_id=note.id,current_stage=stage.name,stages=stages, next_stage=stages[stages.index(stage)+1].name, id_table=note.kanban_table)}}" class="btn btn-default" style=" width: 10px;margins:1px; padding:1px;" > > </a>
+                        <a href="{{url_for('kanban.move_note',note_id=note.id,current_stage=stage.name,stages=stages, next_stage=stages[stages.index(stage)+1].name, id_table=note.kanban_table)}}" class="btn btn-default" style="font-size: 20px;
+                            font-weight: 800;
+                            padding: 10px 10px ;
+                            letter-spacing: 1px;
+                            text-transform: uppercase;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:black;margin-top: 5px; margin-bottom: 5px;
+                             display: flex" > > </a>
+                          {% else %}
+                          <p style="
+                            font-size: 20px;
+                            font-weight: 800;
+                            padding: 10px 10px ;
+                            letter-spacing: 1px;
+                            border-radius: 0;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            color:light grey;margin-top: 5px; margin-bottom: 5px;"> > </p>
                         {% endif %}
 
                       </div>
@@ -62,14 +121,15 @@
                   </div>
                 </div>
               {% endfor %}
-              <!-- div style="color:grey; border:1px solid; border-radius:16px; padding:0.01em 16px;margin-top: 10px;margin-bottom: 10px;"> -->
-                 <form method="POST" action="{{url_for('kanban.new_notes',stage_id=stage.id,table_id=table_id)}}">
+
+
+                  <form method="POST" style="padding:5px 0px;"  action="{{url_for('kanban.new_notes',stage_id=stage.id,table_id=table_id)}}">
                         {{ note_form.hidden_tag() }}
-                     {{ note_form.note_content(class="form-control")}}
+                     {{ note_form.note_content(class="form-control" , style="background-color:rgba(255,255,255,0.5)")}}
                      {{ note_form.submit(class="btn btn-default") }}
                  </form>
-                  <p>{{ stages}} </p>
-              <!-- </div> -->
+
+                </div>
               </div>
             </div>
            {% endfor %}

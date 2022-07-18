@@ -32,8 +32,6 @@ def kanban_table(id):
     notes = Note.query.filter_by(kanban_table=id).all()
     return render_template("kanban_table.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
                            notes=notes,table_id=id, logged_in=current_user.is_authenticated)
-    # return render_template("for_tests.html", note_form=note_form, stage_form=stage_form, stages=exist_stages,
-    #                        notes=notes, table_id=id, logged_in=current_user.is_authenticated)
 
 
 @kanban.route("/kanban_table/new_stage", methods=["GET", "POST"])
@@ -91,3 +89,23 @@ def delete_note():
     db.session.delete(note_id)
     db.session.commit()
     return redirect(url_for('kanban.kanban_table', id=id_table))
+
+@kanban.route("/delete_stage", methods=["GET"])
+def delete_stage():
+    id = request.args.get('id')
+    id_table = request.args.get("id_table")
+    stage_id = Stage.query.filter_by(id=id).first()
+    db.session.delete(stage_id)
+    db.session.commit()
+    return redirect(url_for('kanban.kanban_table', id=id_table))
+
+# @kanban.route("/move_stage", methods=["GET"])
+# def move_stage():
+#     stage_id = request.args.get('stage_id')
+#     table_id = request.args.get("id_table")
+#     next_stage = request.args.get("next_stage")
+#     stage = Stage.query.filter_by(id=stage_id).first()
+#     move_stage = Stage.query.filter_by(name=next_stage).first()
+#     move_stage.notes.append(stage)
+#     db.session.commit()
+#     return redirect(url_for('kanban.kanban_table', id=table_id))
