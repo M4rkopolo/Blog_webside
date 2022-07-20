@@ -18,7 +18,7 @@ Via this website I want to show what programming skills I have. At the same time
 	- Deployed on Heroku
 	- Template from Bootstrap 
 ## Features
-Each user after Sign In or Sign Up to few default account are able to
+Each user, after logging in or registering guest accounts, can
  - Write posts
  - Comment posts
  - Create Kanban board
