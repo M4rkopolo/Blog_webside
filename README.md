@@ -27,8 +27,8 @@ Each user, after logging in or registering guest accounts, can
  
  To do
  - tests
- - share access to kanban boards with privileges
- - implementing RESTfull API for the kanban board
+ - Share access to kanban boards with other users
+ - implementing RESTfull API for kanban board
  - implementing Drag & Drop 
  - geting a job as a Junior Python Developer
 
